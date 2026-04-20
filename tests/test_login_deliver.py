@@ -1,5 +1,6 @@
 import pytest
 import allure
+from config import ErrorMessege
 
 
 class TestDeliverLogin:
@@ -19,9 +20,9 @@ class TestDeliverLogin:
         response = stocks_api.login_deliver(json=body)
 
         if response.status_code == 400:
-            assert response.json() == {"message": "Недостаточно данных для входа"}
+            assert ErrorMessege.NOTENOUGHT_DATA_FOR_LOGIN in response.json()["message"]
         elif response.status_code == 504:
-            pytest.xfail("БАГ API: ожидается 400, но приходит 504")
+            pytest.xfail(ErrorMessege.BUG_API)
 
     @allure.title("Проверка залогина курьера без логина")
     def test_login_deliver_without_login(self, stocks_api, new_courier_password):
@@ -29,7 +30,7 @@ class TestDeliverLogin:
         response = stocks_api.login_deliver(json=body)
 
         assert response.status_code == 400
-        assert response.json()["message"] == "Недостаточно данных для входа"
+        assert ErrorMessege.NOTENOUGHT_DATA_FOR_LOGIN in response.json()["message"]
 
     @allure.title("Проверка залогина несуществующего курьера")
     def test_login_non_existent_user(self, stocks_api, new_courier_data):
@@ -37,4 +38,4 @@ class TestDeliverLogin:
         response = stocks_api.login_deliver(json=body)
 
         assert response.status_code == 404
-        assert response.json()["message"] == "Учетная запись не найдена"
+        assert ErrorMessege.ACCOUNT_NOT_FOUND in response.json()["message"]

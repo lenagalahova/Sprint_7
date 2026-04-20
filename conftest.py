@@ -2,12 +2,7 @@ import pytest
 from stocks_api import StockApi
 from helpers.create_random_data_deliver import (
     create_new_courier_and_return_login_password,
-    create_new_courier_without_login,
-    create_new_courier_without_pass,
-    create_new_courier_without_firstname,
     register_new_courier,
-    register_new_courier_return_login,
-    register_new_courier_return_password,
 )
 
 
@@ -18,17 +13,23 @@ def new_courier_data():
 
 @pytest.fixture
 def new_courier_data_without_login():
-    return create_new_courier_without_login()
+    full_data = create_new_courier_and_return_login_password()
+    payload = {"password": full_data["password"], "firstName": full_data["firstName"]}
+    return payload
 
 
 @pytest.fixture
 def new_courier_data_without_pass():
-    return create_new_courier_without_pass()
+    full_data = create_new_courier_and_return_login_password()
+    payload = {"login": full_data["login"], "firstName": full_data["firstName"]}
+    return payload
 
 
 @pytest.fixture
 def new_courier_data_without_firstname():
-    return create_new_courier_without_firstname()
+    full_data = create_new_courier_and_return_login_password()
+    payload = {"login": full_data["login"], "password": full_data["password"]}
+    return payload
 
 
 @pytest.fixture
@@ -38,12 +39,16 @@ def new_courier():
 
 @pytest.fixture
 def new_courier_login():
-    return register_new_courier_return_login()
+    full_data = register_new_courier()
+    payload = {"login": full_data["login"]}
+    return payload
 
 
 @pytest.fixture
 def new_courier_password():
-    return register_new_courier_return_password()
+    full_data = register_new_courier()
+    payload = {"password": full_data["password"]}
+    return payload
 
 
 @pytest.fixture

@@ -1,4 +1,5 @@
 import allure
+from config import ErrorMessege
 
 
 class TestDeliver:
@@ -22,10 +23,7 @@ class TestDeliver:
         response_2 = stocks_api.create_new_deliver(json=body)
 
         assert response_2.status_code == 409
-        assert (
-            response_2.json()["message"]
-            == "Этот логин уже используется. Попробуйте другой."
-        )
+        assert ErrorMessege.LOGIN_ALREADY_USED in response_2.json()["message"]
 
     @allure.title("Создание курьера без логина")
     def test_create_new_deliver_without_login(
@@ -35,10 +33,7 @@ class TestDeliver:
         response = stocks_api.create_new_deliver(json=body)
 
         assert response.status_code == 400
-        assert (
-            response.json()["message"]
-            == "Недостаточно данных для создания учетной записи"
-        )
+        assert ErrorMessege.INSUFFICIENT_DATA in response.json()["message"]
 
     @allure.title("Создание курьера без пароля")
     def test_create_new_deliver_without_password(
@@ -48,10 +43,7 @@ class TestDeliver:
         response = stocks_api.create_new_deliver(json=body)
 
         assert response.status_code == 400
-        assert (
-            response.json()["message"]
-            == "Недостаточно данных для создания учетной записи"
-        )
+        assert ErrorMessege.INSUFFICIENT_DATA in response.json()["message"]
 
     @allure.title("Создание курьера без имени")
     def test_create_new_deliver_without_firstname(
